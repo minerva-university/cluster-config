@@ -41,6 +41,26 @@ Configure a media server:
 ```
 bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/ct/plex.sh)"
 ```
+Now you need to manually work through the options. Choose defaults for everrything, **except** that you want a **privileged container**, and allow root ssh. This allows us to easily run the following:
+```
+cat <<EOF >> /etc/hosts
+192.168.86.42 minerva0
+EOF
+
+apt install -y nfs-common autofs
+
+cat <<EOF > /etc/auto.home
+*   minerva0:/home/&
+EOF
+
+cat <<EOF >> /etc/auto.master
+/home   /etc/auto.home
+EOF
+
+systemctl reload autofs
+systemctl restart autofs
+
+```
 
 Quickly grab an LXC image of the latest (headless) ubuntu server. This will form the basis of our LDAP server:
 ```
