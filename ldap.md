@@ -144,3 +144,23 @@ EOF
 
 ldapmodify -Y EXTERNAL -H ldapi:/// -f /root/certinfo.ldif
 ```
+
+
+## LDAP clients
+First we set it up so that we can query LDAP:
+
+Make sure that the hosts file contains the ldap server (`minervaldap`):
+```bash
+cat /etc/hosts
+```
+Now run the following to install utilities:
+```bash
+apt install ldap-utils
+cat <<EOF >> /etc/ldap/ldap.conf
+BASE    dc=minerva,dc=local
+URI     ldap://minervaldap
+EOF
+ldapsearch -x -H ldap://minervaldap -b "dc=minerva,dc=local"
+```
+Now we need to authenticate against LDAP:
+
