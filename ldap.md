@@ -159,7 +159,7 @@ cat <<EOF >> /etc/ldap/ldap.conf
 BASE    dc=minerva,dc=local
 URI     ldap://minervaldap
 EOF
-ldapsearch -x -H ldap://minervaldap -b "dc=minerva,dc=local"
+ldapsearch -x -H ldap://ldap.minerva.local -b "dc=minerva,dc=local"
 ```
 Now we need to authenticate against LDAP. This requires us to add the certificate we created on the server:
 ```bash
