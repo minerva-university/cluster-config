@@ -9,10 +9,10 @@ apt update
 apt upgrade
 apt install -y apache2 php php-cgi libapache2-mod-php php-mbstring php-common php-pear slapd ldap-utils ldap-account-manager 
 
-hostnamectl set-hostname ldap.minerva.local
+hostnamectl set-hostname ldap
 
 cat <<EOF >> /etc/hosts
-127.0.1.1 ldap.minerva.local
+127.0.1.1 ldap.minerva.local ldap
 EOF
 cat /etc/hosts
 
@@ -147,7 +147,6 @@ ldapmodify -Y EXTERNAL -H ldapi:/// -f /root/certinfo.ldif
 
 
 ## LDAP clients
-First we set it up so that we can query LDAP:
 
 Make sure that the hosts file contains the ldap server (`minervaldap`):
 ```bash
@@ -162,5 +161,42 @@ URI     ldap://minervaldap
 EOF
 ldapsearch -x -H ldap://minervaldap -b "dc=minerva,dc=local"
 ```
-Now we need to authenticate against LDAP:
+Now we need to authenticate against LDAP. This requires us to add the certificate we created on the server:
+```bash
+wget https://raw.githubusercontent.com/minerva-university/cluster-config/main/mycacert.crt
+mv mycacert.crt /usr/local/share/ca-certificates/
+update-ca-certificates
+```
+Get sssd up and running:
+```bash
+apt install -y sssd-ldap ldap-utils sssd-tools
+
+cat <<EOF > /etc/sssd/sssd.conf
+[sssd]
+config_file_version = 2
+domains = minerva.local
+
+[domain/minerva.local]
+id_provider = ldap
+auth_provider = ldap
+ldap_uri = ldap://ldap.minerva.local
+cache_credentials = True
+ldap_search_base = dc=minerva,dc=local
+EOF
+
+chmod 0600 /etc/sssd/sssd.conf
+chown root:root /etc/sssd/sssd.conf
+pam-auth-update --enable mkhomedir
+
+systemctl start sssd
+```
+
+Now is a good time to confirm that you can do a normal LDAP search:
+```bash
+ldapwhoami -x -ZZ -H ldap://ldap.minerva.local
+```
+It is also a good time to check that you can log in as an LDAP user!
+
+
+
 
