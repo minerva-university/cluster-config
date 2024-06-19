@@ -157,13 +157,9 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 mv ldap_sync.service /etc/systemd/system/ldap_sync.service
-
-mkdir /var/log/ldap_sync
-touch /var/log/ldap_sync/logfile.log
-chown -R nobody:nogroup /var/log/ldap_sync
 ```
 
-Now edit the `/root/ldap_sync/.env` file to contain the various sensitive bits of information.
+Now create and edit the `/etc/ldap_sync/service.conf` file to contain the various sensitive bits of information.
 
 Once that's done, then start everything up!
 

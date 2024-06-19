@@ -5,10 +5,7 @@ After=network.target
 [Service]
 ExecStart=/root/ldap_sync/venv/bin/python /root/ldap_sync/ldap_sync.py
 Restart=always
-User=nobody
-Group=nogroup
-EnvironmentFile=/root/ldap_sync/.env
-Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/etc/ldap_sync/service.conf
 
 [Install]
 WantedBy=multi-user.target

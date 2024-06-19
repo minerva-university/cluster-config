@@ -6,13 +6,7 @@ from ldap3 import Server, Connection, ALL, MODIFY_REPLACE
 from time import sleep
 
 # Configure logging
-logging.basicConfig(
-    filename="/var/log/ldap_sync/logfile.log",
-    # Uncomment this line when running locally
-    # filename="ldap_sync.log",
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(message)s",
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 
 # Function to download and parse the Google spreadsheet
@@ -92,16 +86,31 @@ def process_users(rows, ldap_conn, base_dn):
 
 # Main function
 def main():
-    import pdb
-
-    pdb.set_trace()
-
     spreadsheet_url = os.getenv("LDAP_SPREADSHEET_URL")
-
     ldap_server = os.getenv("LDAP_SERVER")
     bind_dn = os.getenv("LDAP_BIND_DN")
     bind_password = os.getenv("LDAP_BIND_PASSWORD")
     base_dn = os.getenv("LDAP_BASE_DN")
+
+    if not spreadsheet_url:
+        logging.error("LDAP_SPREADSHEET_URL environment variable not set.")
+    if not ldap_server:
+        logging.error("LDAP_SERVER environment variable not set.")
+    if not bind_dn:
+        logging.error("LDAP_BIND_DN environment variable not set.")
+    if not bind_password:
+        logging.error("LDAP_BIND_PASSWORD environment variable not set.")
+    if not base_dn:
+        logging.error("LDAP_BASE_DN environment variable not set.")
+
+    if (
+        not spreadsheet_url
+        or not ldap_server
+        or not bind_dn
+        or not bind_password
+        or not base_dn
+    ):
+        return
 
     while True:
         rows = download_spreadsheet(spreadsheet_url)
