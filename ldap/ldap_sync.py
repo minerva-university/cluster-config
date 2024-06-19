@@ -7,8 +7,9 @@ from time import sleep
 
 # Configure logging
 logging.basicConfig(
-    # filename="/var/log/ldap_sync.log",
-    filename="ldap_sync.log",
+    filename="/var/log/ldap_sync/logfile.log",
+    # Uncomment this line when running locally
+    # filename="ldap_sync.log",
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(message)s",
 )

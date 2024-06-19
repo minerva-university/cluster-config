@@ -145,14 +145,45 @@ EOF
 ldapmodify -Y EXTERNAL -H ldapi:/// -f /root/certinfo.ldif
 ```
 
+## Updating LDAP from Google Spreadsheet
+```bash
+apt install python3.12-venv
+mkdir /root/ldap_sync
+cd /root/ldap_sync
+wget https://raw.githubusercontent.com/minerva-university/cluster-config/main/ldap/requirements.txt
+wget https://raw.githubusercontent.com/minerva-university/cluster-config/main/ldap/ldap_sync.py
+wget https://raw.githubusercontent.com/minerva-university/cluster-config/main/ldap/ldap_sync.service
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+mv ldap_sync.service /etc/systemd/system/ldap_sync.service
+
+mkdir /var/log/ldap_sync
+touch /var/log/ldap_sync/logfile.log
+chown -R nobody:nogroup /var/log/ldap_sync
+```
+
+Now edit the `/root/ldap_sync/.env` file to contain the various sensitive bits of information.
+
+Once that's done, then start everything up!
+
+```bash
+systemctl daemon-reload
+systemctl enable ldap_sync
+systemctl start ldap_sync
+systemctl status ldap_sync
+```
 
 ## LDAP clients
 
 Make sure that the hosts file contains the ldap server (`minervaldap`):
+
 ```bash
 cat /etc/hosts
 ```
+
 Now run the following to install utilities:
+
 ```bash
 apt install ldap-utils
 cat <<EOF >> /etc/ldap/ldap.conf
@@ -161,13 +192,17 @@ URI     ldap://minervaldap
 EOF
 ldapsearch -x -H ldap://ldap.minerva.local -b "dc=minerva,dc=local"
 ```
+
 Now we need to authenticate against LDAP. This requires us to add the certificate we created on the server:
+
 ```bash
 wget https://raw.githubusercontent.com/minerva-university/cluster-config/main/mycacert.crt
 mv mycacert.crt /usr/local/share/ca-certificates/
 update-ca-certificates
 ```
+
 Get sssd up and running:
+
 ```bash
 apt install -y sssd-ldap ldap-utils sssd-tools
 
@@ -192,11 +227,9 @@ systemctl start sssd
 ```
 
 Now is a good time to confirm that you can do a normal LDAP search:
+
 ```bash
 ldapwhoami -x -ZZ -H ldap://ldap.minerva.local
 ```
+
 It is also a good time to check that you can log in as an LDAP user!
-
-
-
-
