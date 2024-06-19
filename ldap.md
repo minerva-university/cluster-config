@@ -221,6 +221,15 @@ pam-auth-update --enable mkhomedir
 
 systemctl start sssd
 ```
+If you want to enable password ssh login, you need to add the following lines to `/etc/ssh/sshd_config`:
+
+```bash
+cat <<EOF > /etc/ssh/sshd_config.d/50-cloud-init.conf
+PasswordAuthentication yes
+AllowAgentForwarding yes
+EOF
+systemctl restart ssh
+```
 
 Now is a good time to confirm that you can do a normal LDAP search:
 
