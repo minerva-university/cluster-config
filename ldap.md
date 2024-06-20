@@ -172,7 +172,7 @@ systemctl status ldap_sync
 
 ## LDAP clients
 
-Make sure that the hosts file contains the ldap server (`minervaldap`):
+Make sure that the hosts file contains the ldap server (`ldap.minerva.local`):
 
 ```bash
 cat /etc/hosts
@@ -184,7 +184,7 @@ Now run the following to install utilities:
 apt install ldap-utils
 cat <<EOF >> /etc/ldap/ldap.conf
 BASE    dc=minerva,dc=local
-URI     ldap://minervaldap
+URI     ldap://ldap.minerva.local
 EOF
 ldapsearch -x -H ldap://ldap.minerva.local -b "dc=minerva,dc=local"
 ```
