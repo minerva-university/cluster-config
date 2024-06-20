@@ -24,19 +24,6 @@ ls -la
 cd /data
 ls -la
 ```
-If everything looks ok, go ahead and make the changes permanent. After which we can add a user and a desktop. (This allows me dual use of the machine.)
-```bash
-systemctl daemon-reload
-
-adduser philip
-usermod -aG sudo philip
-groups philip
-
-apt update
-apt install sudo
-apt install gnome chromium cups
-systemctl start gdm3
-```
 Configure a media server:
 ```
 bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/ct/plex.sh)"
@@ -44,13 +31,13 @@ bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/ct/plex.sh)"
 Now you need to manually work through the options. Choose defaults for everrything, **except** that you want a **privileged container**, and allow root ssh. This allows us to easily run the following:
 ```
 cat <<EOF >> /etc/hosts
-192.168.86.42 minerva0
+192.168.86.31 cs0 cs0.minerva.local
 EOF
 
 apt install -y nfs-common autofs
 
 cat <<EOF > /etc/auto.home
-*   minerva0:/home/&
+*   cs0.minerva.local:/home/&
 EOF
 
 cat <<EOF >> /etc/auto.master
@@ -62,7 +49,7 @@ systemctl restart autofs
 
 ```
 
-Quickly grab an LXC image of the latest (headless) ubuntu server. This will form the basis of our LDAP server:
+Quickly grab an LXC image of the latest (headless) ubuntu server.
 ```
 pveam update
 pveam available
