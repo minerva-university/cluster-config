@@ -4,7 +4,7 @@
 
 192.168.86.21 minervaldap ldap ldap.minerva.local
 192.168.86.31 cs0 cs0.minerva.local nfs nfs.minerva.local
-# 192.169.86.??? cs1 cs1.minerva.local
+192.169.86.67 cs1 cs1.minerva.local
 192.168.86.48 cs2 cs2.minerva.local
 
 192.168.86.45 plex
