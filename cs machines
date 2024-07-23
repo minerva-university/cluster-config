@@ -20,6 +20,21 @@ cd /data
 ls -la
 ```
 
+If this all executes without issue, then you're done!
+
+### NFS mounting home
+
+On the nfs server, run the following:
+
+```bash
+apt install -y nfs-kernel-server 
+
+cat <<EOF >> /etc/exports
+/home    *(rw,sync,no_root_squash,no_subtree_check,insecure)
+EOF
+exportfs -a
+```
+
 ## cs1
 Make the disk availbe to the VM:
 ```bash
