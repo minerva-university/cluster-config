@@ -3,7 +3,7 @@
 Install useful packages:
 
 ```bash
-apt install -y micro htop mosh qemu-guest-agent
+apt install -y micro htop mosh qemu-guest-agent openjdk-21-jdk openjdk-21-jre-headless
 ```
 
 Enable guest agent in the proxmox environment, and shutdown the machine, then start it up again:
