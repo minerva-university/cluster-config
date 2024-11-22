@@ -3,7 +3,7 @@
 Install useful packages:
 
 ```bash
-apt install -y micro htop mosh qemu-guest-agent openjdk-21-jdk openjdk-21-jre-headless
+apt install -y micro htop mosh qemu-guest-agent openjdk-21-jdk openjdk-21-jre-headless gcc python3-pip python3.12-venv make
 ```
 
 Enable guest agent in the proxmox environment, and shutdown the machine, then start it up again:
